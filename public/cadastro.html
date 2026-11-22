@@ -101,7 +101,6 @@
             let com = email.indexOf('.com');
             let arroba = email.indexOf('@');
             let arroba_antes_com = arroba < com;
-            var cadastro = { email: email, senha: senha }
             if (nome == "" || email == "" || senha == "" || conf_senha == "" || codigo == "") {
                 toast.innerHTML = 'Preencha os dados corretamente'
             } else if (com < 0 || arroba < 0) {
@@ -130,8 +129,8 @@
                     })
                         .then(function (resposta) {
                             if (resposta.ok) {
-                                mostrarToast("Cadastro realizado com sucesso! Redirecionando...");
                                 setTimeout(function () {
+                                    toast.innerHTML = 'Cadastro realizado com sucesso! Redirecionando...'
                                     window.location = "./login.html";
                                 }, 2000);
                             } else {
