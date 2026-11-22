@@ -12,22 +12,22 @@
 </head>
 
 <body onload="obterDadosGrafico(), validarSessao()">
-    
+
     <div class="painel-dashboard">
 
         <!-- MENU LATERAL -->
-            <div class="menu-lateral">
-                <img src="../assets/imgs/logoBeeFollow_branco.png" alt="Logo Bee Follow" class="logo-menu">
-                <h3 class="boas-vindas">Bem-vindo!</h3>
-                <div class="perfil-usuario">
-                        <div class="icone-usuario">👤</div>
-                        <span id="b_usuario"></span>
-                    </div><br>
-                <a href="" class="ativo"> Dashboard</a>
-                <a href=""> Colmeias</a>
-                <a href=""> Alertas</a>
-                <a href=""> Relatórios</a>
-                <a href=""> Sensores</a>
+        <div class="menu-lateral">
+            <img src="../assets/imgs/logoBeeFollow_branco.png" alt="Logo Bee Follow" class="logo-menu">
+            <h3 class="boas-vindas">Bem-vindo!</h3>
+            <div class="perfil-usuario">
+                <div class="icone-usuario">👤</div>
+                <span id="b_usuario"></span>
+            </div><br>
+            <a href="" class="ativo"> Dashboard</a>
+            <a href=""> Colmeias</a>
+            <a href=""> Alertas</a>
+            <a href=""> Relatórios</a>
+            <a href=""> Sensores</a>
 
             <div class="menu-rodape">
                 <button class="link-saida" onclick="sair()">↪ Sair</button>
@@ -39,7 +39,8 @@
 
             <!-- Cabeçalho principal da Dashboard -->
             <div class="cabecalho-dashboard">
-                <h1>GESTÃO DA TEMPERATURA DE COLMEIAS - BEE FOLLOW</h1>  
+                <h1>GESTÃO DA TEMPERATURA DE COLMEIAS - BEE FOLLOW</h1>
+                <span id="ultima"></span>
             </div>
 
             <!-- CARDS DE INDICADORES (4 Cards como na referência) -->
@@ -68,7 +69,8 @@
                 <div class="indicador" id="kpi4">
                     <h2></span>Status do sensor</h2>
                     <span class="valor-card valor-hardware">
-                        <span class="cor-ok" id="kpi4_ativos">Ativo: 0</span> | <span class="cor-critica" id="kpi4_inativos">Inativo: 0</span>
+                        <span class="cor-ok" id="kpi4_ativos">Ativo: 0</span> | <span class="cor-critica"
+                            id="kpi4_inativos">Inativo: 0</span>
                     </span>
                     <p class="texto-comparacao">(1 sensor apresentou falha nas últimas 4 horas)</p>
                 </div>
@@ -98,10 +100,14 @@
                 <div class="card-guia">
                     <h2>Guia de monitoramento</h2>
                     <div class="texto-guia">
-                        <p><strong class="cor-critica">Vermelho (Crítico):</strong> Alteração intensa na colmeia, exigindo intervenção presencial imediata do apicultor para evitar danos ao enxame.</p>
-                        <p><strong class="cor-atencao">Amarelo (Atenção):</strong> Variação térmica que indica comportamento fora do padrão, exigindo acompanhamento prioritário no sistema.</p>
-                        <p><strong class="cor-adaptacao">Azul (Adaptação):</strong> Temperatura abaixo da faixa ideal, exigindo inspeções presenciais constantes.</p>
-                        <p><strong class="cor-ok">Verde (Normal):</strong> Temperatura dentro da faixa ideal de 34°C a 35°C, dispensando inspeções presenciais não programadas.</p>
+                        <p><strong class="cor-critica">Vermelho (Crítico):</strong> Alteração intensa na colmeia,
+                            exigindo intervenção presencial imediata do apicultor para evitar danos ao enxame.</p>
+                        <p><strong class="cor-atencao">Amarelo (Atenção):</strong> Variação térmica que indica
+                            comportamento fora do padrão, exigindo acompanhamento prioritário no sistema.</p>
+                        <p><strong class="cor-adaptacao">Azul (Adaptação):</strong> Temperatura abaixo da faixa ideal,
+                            exigindo inspeções presenciais constantes.</p>
+                        <p><strong class="cor-ok">Verde (Normal):</strong> Temperatura dentro da faixa ideal de 34°C a
+                            35°C, dispensando inspeções presenciais não programadas.</p>
                     </div>
                 </div>
             </div>
@@ -111,10 +117,10 @@
 
     <!-- SCRIPT DO GRÁFICO DE BARRAS -->
     <script>
-        
+
         Chart.defaults.color = '#ffffff';
-        
-        document.addEventListener("DOMContentLoaded", () =>{
+
+        document.addEventListener("DOMContentLoaded", () => {
             const kpi1 = document.getElementById('kpi1')
             const kpi2 = document.getElementById('kpi2')
             const kpi3 = document.getElementById('kpi3')
@@ -124,63 +130,62 @@
         // TODAS AS KPIS
 
         // KPI 1
-            function carregarKpis() {
-                fetch(res => res.json())
-                    .then(res => res.json())
-                    .then(preencherkpi1)
-                    .then(erro => console.error)
-                
-
-            }
+        function carregarKpis() {
+            fetch(res => res.json())
+                .then(res => res.json())
+                .then(preencherkpi1)
+                .then(erro => console.error)
 
 
-    const sensor = document.getElementById('sensorAnalogico');
-    let grafico_temperatura = new Chart(sensor, {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Temperatura das Colmeias',
-                data: [],
-                borderWidth: 1,
-                backgroundColor: ['#65b96e', '#f7a925', '#D9534F', '#62b3af', '#65b96e', '#65b96e', '#65b96e', '#65b96e', '#65b96e', '#f7a925', '#65b96e', '#65b96e' ],
-                borderColor: 'white',
-                borderWidth: 1
-            },
-            ],
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Colmeias'
-                    },
-                    beginAtZero: true,
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: '(°C)'
-                    },
-                    min: 25,
-                    max: 40,
-                    ticks: {
-                        stepSize: 1,
-                    },
-                },
-            },
         }
-    });
 
-    var idApiario = sessionStorage.APIARIO
 
-    function obterDadosGrafico() {
-        fetch(`/dashboard/ultimas/dados/${idApiario}`, { cache: 'no-store' }).then(function (response) {
+        const sensor = document.getElementById('sensorAnalogico');
+        let grafico_temperatura = new Chart(sensor, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Temperatura das Colmeias',
+                    data: [],
+                    borderWidth: 1,
+                    backgroundColor: ['#65b96e', '#f7a925', '#D9534F', '#62b3af', '#65b96e', '#65b96e', '#65b96e', '#65b96e', '#65b96e', '#f7a925', '#65b96e', '#65b96e'],
+                    borderColor: 'white',
+                    borderWidth: 1
+                },
+                ],
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Colmeias'
+                        },
+                        beginAtZero: true,
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: '(°C)'
+                        },
+                        min: 25,
+                        max: 40,
+                        ticks: {
+                            stepSize: 1,
+                        },
+                    },
+                },
+            }
+        });
+
+        var idApiario = sessionStorage.APIARIO
+
+        function obterDadosGrafico() {
+            fetch(`/dashboard/ultimas/dados/${idApiario}`, { cache: 'no-store' }).then(function (response) {
                 if (response.ok) {
                     response.json().then(function (resposta) {
                         console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                        resposta.reverse();
                         plotarGrafico(resposta);
                     });
                 } else {
@@ -189,12 +194,11 @@
             })
                 .catch(function (error) {
                     console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
+                });
             fetch(`/dashboard/ultimas/sensores/${idApiario}`, { cache: 'no-store' }).then(function (response) {
                 if (response.ok) {
                     response.json().then(function (resposta) {
                         console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                        resposta.reverse();
                         plotarSensores(resposta);
                     });
                 } else {
@@ -203,26 +207,25 @@
             })
                 .catch(function (error) {
                     console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
+                });
             fetch(`/dashboard/ultimas/alertas/${idApiario}`, { cache: 'no-store' }).then(function (response) {
                 if (response.ok) {
                     response.json().then(function (resposta) {
                         console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                        resposta.reverse();
                         plotarAlertas(resposta);
+                        proximaAtualizacao = setTimeout(() => atualizarGrafico(), 20000);
                     });
                 } else {
                     console.error('Nenhum dado encontrado ou erro na API');
+                    proximaAtualizacao = setTimeout(() => atualizarGrafico(), 20000);
                 }
             })
                 .catch(function (error) {
                     console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
-            setTimeout(() => obterDadosGrafico(), 10000);
-    }
-    function plotarGrafico(resposta) {
-
-    
+                    proximaAtualizacao = setTimeout(() => atualizarGrafico(), 20000);
+                });
+        }
+        function plotarGrafico(resposta) {
             console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
             console.log(resposta)
 
@@ -233,13 +236,12 @@
                 var registro = resposta[i];
                 grafico_temperatura.data.labels.push(registro.id);
                 grafico_temperatura.data.datasets[0].data.push(registro.temperatura);
+                ultima.innerHTML = `Última leitura: ${registro.ultimaAtualizacao}`;
             }
 
             grafico_temperatura.update();
-
-            // setTimeout(() => atualizarGrafico(), 5000);
-    }
-    function plotarSensores(resposta) {
+        }
+        function plotarSensores(resposta) {
             console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarSensores":')
             console.log(resposta)
             status_sensores.innerHTML = `<tr>
@@ -250,15 +252,23 @@
                                 </tr>`
             for (i = 0; i < resposta.length; i++) {
                 var registro = resposta[i];
-                status_sensores.innerHTML += `
+                if (registro.funcionando == 0) {
+                    status_sensores.innerHTML += `
                     <tr>
                     <td>Colmeia ${registro.id}</td>
-                    <td>${registro.funcionando}</td>
+                    <td>Inativo</td>
                     <td>${registro.ultimamanutencao}</td>
                     </tr>`;
+                } else {
+                    status_sensores.innerHTML += `
+                    <tr>
+                    <td>Colmeia ${registro.id}</td>
+                    <td>Ativo</td>
+                    <td>${registro.ultimamanutencao}</td>
+                    </tr>`;
+                }
+                
             }
-            
-            // setTimeout(() => atualizarGrafico(), 5000);
         }
         function plotarAlertas(resposta) {
             console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarAlertas":')
@@ -269,14 +279,14 @@
                 if (registro.temperatura < 34) {
                     card_alertas.innerHTML += `<div class="bloco-critico-item">
                         <strong>Colmeia ${registro.id}</strong>
-                        <p class="cor-critica">Temperatura abaixo do normal (${registro.temperatura}ºC)</p>
+                        <p class="cor-adaptacao">Temperatura abaixo do normal (${registro.temperatura}ºC)</p>
                         <span>Colocar informações do que o apicultor deve fazer diante dessa temperatura</span>
                         <small>${registro.dataHora}</small>
                         </div>`
                 } else if (registro.temperatura > 34 && registro.temperatura <= 36) {
                     card_alertas.innerHTML += `<div class="bloco-critico-item">
                         <strong>Colmeia ${registro.id}</strong>
-                        <p class="cor-critica">Temperatura abaixo do normal (${registro.temperatura}ºC)</p>
+                        <p class="cor-ok">Temperatura abaixo do normal (${registro.temperatura}ºC)</p>
                         <span>Colocar informações do que o apicultor deve fazer diante dessa temperatura</span>
                         <small>${registro.dataHora}</small>
                         </div>`
@@ -289,13 +299,129 @@
                         </div>`
                 }
             }
-            
-            // setTimeout(() => atualizarGrafico(), 5000);
         }
-    function sair() {
-        window.location.href = "./login.html";
-        limparSessao();
-    }
+        
+        let proximaAtualizacao;
+
+
+        // A partir daqui é criada uma função que atualiza os gráficos, tabelas e alertas. Essa função é ativada nas linhas 215, 219 e 224
+
+        function atualizarGrafico() {
+            fetch(`/dashboard/ultimas/dados/${idApiario}`, { cache: 'no-store' })
+                .then(function (response) {
+                    if (response.ok) {
+                        response.json().then(function (novoRegistro) {
+                            console.log(`Dados recebidos (Temperatura): ${JSON.stringify(novoRegistro)}`);
+
+                            grafico_temperatura.data.labels = [];
+                            grafico_temperatura.data.datasets[0].data = [];
+
+                            for (let i = 0; i < novoRegistro.length; i++) {
+                                grafico_temperatura.data.labels.push(`Colmeia ${novoRegistro[i].id}`);
+                                grafico_temperatura.data.datasets[0].data.push(novoRegistro[i].temperatura);
+                                ultima.innerHTML = `Última leitura: ${novoRegistro[0].ultimaAtualizacao}`;
+                            }
+
+                            grafico_temperatura.update();
+                        });
+                    } else {
+                        console.error('Nenhum dado encontrado ou erro na API de dados');
+                    }
+                })
+                .catch(function (error) {
+                    console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+                });
+            fetch(`/dashboard/ultimas/sensores/${idApiario}`, { cache: 'no-store' })
+                .then(function (response) {
+                    if (response.ok) {
+                        response.json().then(function (novoRegistro) {
+                            console.log(`Dados recebidos (Sensores): ${JSON.stringify(novoRegistro)}`);
+                            status_sensores.innerHTML = `
+                                                <tr>
+                                                    <th>Colmeia</th>
+                                                    <th>Status</th>
+                                                    <th>Última Manutenção</th>
+                                                </tr>`;
+                            for (let i = 0; i < novoRegistro.length; i++) {
+                                var registro = novoRegistro[i];
+                                if (registro.funcionando == 0) {
+                                    status_sensores.innerHTML += `
+                                    <tr>
+                                    <td>Colmeia ${registro.id}</td>
+                                    <td>Inativo</td>
+                                    <td>${registro.ultimamanutencao}</td>
+                                    </tr>`;
+                                } else {
+                                    status_sensores.innerHTML += `
+                                    <tr>
+                                    <td>Colmeia ${registro.id}</td>
+                                    <td>Ativo</td>
+                                    <td>${registro.ultimamanutencao}</td>
+                                    </tr>`;
+                                }
+                            }
+                        });
+                    } else {
+                        console.error('Nenhum dado encontrado ou erro na API de sensores');
+                    }
+                })
+                .catch(function (error) {
+                    console.error(`Erro na obtenção dos dados p/ sensores: ${error.message}`);
+                });
+            fetch(`/dashboard/ultimas/alertas/${idApiario}`, { cache: 'no-store' })
+                .then(function (response) {
+                    if (response.ok) {
+                        response.json().then(function (novoRegistro) {
+                            console.log(`Dados recebidos (Alertas): ${JSON.stringify(novoRegistro)}`);
+
+                            card_alertas.innerHTML = '<h2>Alertas Recentes</h2>';
+
+                            for (let i = 0; i < novoRegistro.length; i++) {
+                                var registro = novoRegistro[i];
+
+                                if (registro.temperatura < 34) {
+                                    card_alertas.innerHTML += `
+                                <div class="bloco-critico-item">
+                                    <strong>Colmeia ${registro.id}</strong>
+                                    <p class="cor-adaptacao">Temperatura abaixo do normal (${registro.temperatura}ºC)</p>
+                                    <span>Decidir o que colocar aqui.</span>
+                                    <small>${registro.dataHora}</small>
+                                </div>`;
+                                } else if (registro.temperatura >= 34 && registro.temperatura <= 36) {
+                                    card_alertas.innerHTML += `
+                                <div class="bloco-critico-item">
+                                    <strong>Colmeia ${registro.id}</strong>
+                                    <p class="cor-ok">Temperatura normal (${registro.temperatura}ºC)</p>
+                                    <span>Decidir o que colocar aqui.</span>
+                                    <small>${registro.dataHora}</small>
+                                </div>`;
+                                } else {
+                                    card_alertas.innerHTML += `
+                                <div class="bloco-critico-item">
+                                    <strong>Colmeia ${registro.id}</strong>
+                                    <p class="cor-critica">Temperatura acima do normal (${registro.temperatura}ºC)</p>
+                                    <span>Decidir o que colocar aqui.</span>
+                                    <small>${registro.dataHora}</small>
+                                </div>`;
+                                }
+                            }
+
+                            proximaAtualizacao = setTimeout(() => atualizarGrafico(), 20000);
+                        });
+                    } else {
+                        console.error('Nenhum dado encontrado ou erro na API de alertas');
+                        proximaAtualizacao = setTimeout(() => atualizarGrafico(), 20000);
+                    }
+                })
+                .catch(function (error) {
+                    console.error(`Erro na obtenção dos dados p/ alertas: ${error.message}`);
+                    proximaAtualizacao = setTimeout(() => atualizarGrafico(), 20000);
+                });
+        }
+        function sair() {
+            window.location.href = "./login.html";
+            limparSessao();
+        }
     </script>
 </body>
 

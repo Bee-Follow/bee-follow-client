@@ -2,8 +2,6 @@ var dashboardModel = require("../models/dashboardModel");
 
 function buscarUltimasMedidas(req, res) {
 
-    // const limite_linhas = 7;
-
     var idApiario = req.params.idApiario;
 
     dashboardModel.buscarUltimasMedidas(idApiario).then(function (resultado) {
@@ -20,8 +18,6 @@ function buscarUltimasMedidas(req, res) {
 }
 function buscarSensoresAtivos(req, res) {
 
-    // const limite_linhas = 7;
-
     var idApiario = req.params.idApiario;
 
     dashboardModel.buscarSensoresAtivos(idApiario).then(function (resultado) {
@@ -37,8 +33,6 @@ function buscarSensoresAtivos(req, res) {
     });
 }
 function buscarAlertas(req, res) {
-
-    // const limite_linhas = 7;
 
     var idApiario = req.params.idApiario;
 
