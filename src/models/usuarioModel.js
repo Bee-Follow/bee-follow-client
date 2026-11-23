@@ -1,11 +1,13 @@
 var database = require("../database/config");
 
+var chave_senha = 'passwd_beefollow'
+
 function cadastrar(nome, email, senha, fk_empresa) {
     console.log("ACESSEI O USUARIO MODEL \n\n function cadastrar():", nome, email, senha, fk_empresa);
 
     var instrucaoSql = `
         INSERT INTO funcionarios (nome, email, senha, fk_empresa)
-        VALUES ('${nome}', '${email}', sha2('${senha}', 256), '${fk_empresa}');
+        VALUES ('${nome}', '${email}', aes_encrypt('${senha}', '${chave_senha}'), '${fk_empresa}');
     `;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
@@ -15,8 +17,8 @@ function cadastrar(nome, email, senha, fk_empresa) {
 function autenticar(email, senha) {
     console.log("ACESSEI O USUARIO MODEL \n\n function autenticar():", email);
 
-    var instrucaoSql = ` select id, nome, email, fk_empresa, fk_apiario from vw_autenticacao_usuario
-    where email = '${email}' and senha = sha2('${senha}', 256)
+    var instrucaoSql = ` select id, nome, cast(aes_decrypt(senha, '${chave_senha}') as char), email, fk_empresa, fk_apiario from vw_autenticacao_usuario
+    where email = '${email}' and senha = aes_encrypt('${senha}', '${chave_senha}')
     limit 1`;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
