@@ -20,7 +20,7 @@ header {
     width: 100%;
     /* Qualquer erro de disposição retirar esses 2 aqui de baixo */
     z-index: 999;
-    position: relative;
+    position: fixed;
 }
 
 .text-titulo {
