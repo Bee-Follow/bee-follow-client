@@ -10,6 +10,7 @@ function cadastrar(nome, email, senha, fk_empresa) {
         VALUES ('${nome}', '${email}', aes_encrypt('${senha}', '${chave_senha}'), '${fk_empresa}');
     `;
 
+    
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
