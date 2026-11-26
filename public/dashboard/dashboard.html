@@ -45,21 +45,21 @@
 
             <!-- CARDS DE INDICADORES (4 Cards como na referência) -->
             <div class="secao-indicadores">
-                <div class="indicador indicador-destaque" id="kpi1">
+                 <div class="indicador indicador-destaque-enxameacao" id="kpi2">
+                    <h2 id="titulo_kpi2"></h2>
+                    <span class="valor-card">
+                        <span class="cor-critica" id="kpi2_enxameacao"></span>
+                    </span>
+                    <p class="texto-comparacao" id="texto2_comparacao"></p>
+                </div>
+                <div class="indicador indicador-destaque-alerta" id="kpi1">
                     <h2 id="titulo_kpi1"></h2>
                     <span class="valor-card">
-                        <span class="cor-critica" id="kpi1_atencao"></span> | <span id="kpi1_total"></span>
+                        <span class="cor-atencao" id="kpi1_atencao"></span> | <span id="kpi1_total" style="color: #a3b6a9;"></span>
                     </span>
                     <p class="texto-comparacao" id="texto1_comparacao"></p>
                 </div>
-                <div class="indicador" id="kpi2">
-                    <h2 id="titulo_kpi2"></h2>
-                    <span class="valor-card">
-                        <span class="cor-critica" id="kpi2_atencao"></span>|<span id="kpi2_normal"></span>
-                    </span>
-                    <p class="texto-comparacao" id="texto2_comparacao">(Representa 33,3% do apiário afetado)</p>
-                </div>
-                <div class="indicador" id="kpi3">
+                <div class="indicador indicador-destaque-adaptacao" id="kpi3">
                     <h2 id="titulo_kpi3"></h2>
                     <span class="valor-card">
                         <span id="kpi3_valor"></span>
@@ -80,28 +80,28 @@
                     <h2>Temperatura das Colmeias<span id="data_hora"></span></h2>
                     <canvas id="sensorAnalogico"></canvas>
                 </div>
-
-                <div class="card-alertas-recentes" id="card_alertas">
+                <div class="card-alertas-recentes">
                     <h2>Alertas Recentes</h2>
+                    <div class="lista-alertas" id="card_alertas"></div>
                 </div>
             </div>
             <div class="secao-inferior">
                 <div class="card-ultimas-leituras">
                     <h2>Status sensores</h2>
-                    <table class="tabela-leituras" id="status_sensores">
-                    </table>
+                    <div class="card-tabela">
+                        <table class="tabela-leituras" id="status_sensores"></table>
+                    </div>
                 </div>
                 <div class="card-guia">
                     <h2>Guia de monitoramento</h2>
                     <div class="texto-guia">
-                        <p><strong class="cor-critica">Vermelho (Crítico — acima de 38°C):</strong>Temperatura elevada demais na colmeia, exigindo intervenção presencial imediata do apicultor para evitar superaquecimento e danos ao enxame.</p>
-                        <p><strong class="cor-atencao">Amarelo (Atenção — entre 36°C e 38°C):</strong> Variação térmica acima da faixa normal, indicando comportamento fora do padrão e exigindo acompanhamento prioritário no sistema.</p>
-                        <p><strong class="cor-adaptacao">Azul (Adaptação — abaixo de 34°C):</strong>Temperatura abaixo da faixa ideal, podendo indicar fase de adaptação ou risco de enxameação, exigindo inspeções e acompanhamento frequentes.</p>
-                        <p><strong class="cor-ok">Verde (Normal — de 34°C a 36°C):</strong>Temperatura dentro da faixa ideal de operação, dispensando inspeções presenciais não programadas.</p>
+                        <p><strong class="cor-critica">Vermelho (Crítico — acima de 38°C):</strong> Temperatura elevada demais na colmeia, exigindo intervenção presencial imediata do apicultor para evitar superaquecimento, enxameação ou danos ao enxame.</p>
+                        <p><strong class="cor-atencao">Amarelo (Atenção — entre 36°C e 38°C):</strong> Variação térmica acima da faixa normal, indicando comportamento fora do padrão e exigindo acompanhamento prioritário no sistema para monitorar sinais de enxameação.</p>
+                        <p><strong class="cor-adaptacao">Azul (Adaptação — abaixo de 34°C):</strong> Temperatura abaixo da faixa ideal, podendo indicar fase de adaptação ou risco de enxameação, exigindo inspeções e acompanhamento frequentes.</p>
+                        <p><strong class="cor-ok">Verde (Normal — de 34°C a 36°C):</strong> Temperatura dentro da faixa ideal de operação, dispensando inspeções presenciais não programadas.</p>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <script>
@@ -115,7 +115,7 @@
                     label: 'Temperatura das Colmeias',
                     data: [],
                     borderWidth: 1,
-                    backgroundColor: ['#65b96e', '#f7a925', '#D9534F', '#62b3af', '#65b96e', '#65b96e', '#65b96e', '#65b96e', '#65b96e', '#f7a925', '#65b96e', '#65b96e'],
+                    backgroundColor: [],
                     borderColor: 'white',
                     borderWidth: 1
                 },
@@ -252,18 +252,28 @@
                 atualizarGrafico();
             }, 60000);
         }
-
         function plotarGrafico(resposta) {
             console.log('Dados do gráfico de temperatura: ', resposta)
             grafico_temperatura.data.labels = [];
             grafico_temperatura.data.datasets[0].data = [];
-
+            grafico_temperatura.data.datasets[0].backgroundColor = [];
             for (i = 0; i < resposta.length; i++) {
                 var registro = resposta[i];
+                var temperatura = Number(registro.temperatura)
+                var cor = ''
+                if (temperatura >= 34 && temperatura <= 36) {
+                    cor = "#65b96e"
+                } else if (temperatura < 34) {
+                    cor = "#62b3af"
+                } else if (temperatura > 38) {
+                    cor = "#e74c3c"
+                } else {
+                    cor = "#f7b731"
+                }
                 grafico_temperatura.data.labels.push(registro.id);
                 grafico_temperatura.data.datasets[0].data.push(registro.temperatura);
+                grafico_temperatura.data.datasets[0].backgroundColor.push(cor);
             }
-
             grafico_temperatura.update();
         }
         function plotarSensores(resposta) {
@@ -298,52 +308,51 @@
         }
         function plotarAlertas(resposta) {
             console.log('Dados dos alertas:', resposta)
-            card_alertas.innerHTML = '<h2>Alertas Recentes</h2>';
             for (i = 0; i < resposta.length; i++) {
                 var registro = resposta[i];
                 if (registro.temperatura < 34) {
-                    card_alertas.innerHTML += `<div class="bloco-critico-item">
+                    card_alertas.innerHTML += `<div class="bloco-adaptacao-item">
                                     <strong>Colmeia ${registro.id}</strong>
                                     <p class="cor-adaptacao">Temperatura abaixo do normal (${registro.temperatura}ºC)<small style="color:white"> - Medição: ${registro.dataHora}</small></p>
                                     <span>Inspecione a colmeia para verificar sinais de enxameação ou necessidade de reforço térmico.</span>
                                 </div>`
-                } else if (registro.temperatura > 34 && registro.temperatura <= 36) {
+                } else if (registro.temperatura > 36 && registro.temperatura < 38) {
+                    card_alertas.innerHTML += `<div class="bloco-alerta-item">
+                    <strong>Colmeia ${registro.id}</strong>
+                    <p class="cor-atencao">Temperatura em atenção (${registro.temperatura}ºC)<small style="color:white"> - Medição: ${registro.dataHora}</small></p>
+                    <span>Variação térmica fora do padrão. Acompanhe no sistema e fique atento a possíveis sinais de enxameação.</span> 
+                    </div>`;
+                } else if (registro.temperatura > 37){
                     card_alertas.innerHTML += `<div class="bloco-critico-item">
-                                    <strong>Colmeia ${registro.id}</strong>
-                                    <p class="cor-ok">Temperatura normal (${registro.temperatura}ºC)<small style="color:white"> - Medição: ${registro.dataHora}</small></p>
-                                    <span>Condições térmicas ideais. Nenhuma intervenção presencial necessária no momento.</span> 
-                                </div>`
-                } else {
-                    card_alertas.innerHTML += `<div class="bloco-critico-item">
-                                    <strong>Colmeia ${registro.id}</strong>
-                                    <p class="cor-critica">Temperatura acima do normal (${registro.temperatura}ºC)<small style="color:white"> - Medição: ${registro.dataHora}</small></p>
-                                    <span>Intervenção imediata: verifique a ventilação interna e o sombreamento da colmeia para evitar superaquecimento.</span>
-                                </div>`;
+                        <strong>Colmeia ${registro.id}</strong>
+                        <p class="cor-critica">Temperatura crítica (${registro.temperatura}ºC)<small style="color:white"> - Medição: ${registro.dataHora}</small></p>
+                        <span>Intervenção presencial imediata: avalie a colmeia para identificar possível processo de enxameação e evitar perdas.</span>
+                    </div>`
                 }
             }
         }
         function plotarKpi1(resposta) {
             console.log('Dados recebidos, KPI1: ', resposta);
+            titulo_kpi1.innerHTML = 'Colmeias com temperaturas fora do padrão'
             let alertas = 0;
             if (resposta.qntEmAlerta.length > 0) {
                 alertas = resposta.qntEmAlerta[0].qtd_colmeias_alertas;
+                kpi1_atencao.innerHTML = `${alertas}`;
+            } else {
+                kpi1_atencao.innerHTML = `<span class="cor-ok">${alertas}</span>`;
             }
             let total = 0;
             if (resposta.totalColmeias.length > 0) {
                 total = resposta.totalColmeias[0].qtd_colmeias;
+                kpi1_total.innerHTML = `${total}`;
             }
-            titulo_kpi1.innerHTML = 'Colmeias com temperaturas fora do padrão'
-            kpi1_atencao.innerHTML = `${alertas}`;
-            kpi1_total.innerHTML = `${total}`;
             if (resposta.colmeiasEmAlerta.length > 0) {
-                texto1_comparacao.innerHTML = "Colmeias em atenção: ";
+                texto1_comparacao.innerHTML = "Colmeias afetadas: ";
                 for (let i = 0; i < resposta.colmeiasEmAlerta.length; i++) {
-                    if (i == 0) {
-                        texto1_comparacao.innerHTML += `${resposta.colmeiasEmAlerta[i].colmeia},`;
-                    } else if (i == resposta.colmeiasEmAlerta.length - 1) {
-                        texto1_comparacao.innerHTML += `${resposta.colmeiasEmAlerta[i].colmeia}`;
+                    if (i > 0) {
+                        texto1_comparacao.innerHTML += `, ${resposta.colmeiasEmAlerta[i].colmeia}`;
                     } else {
-                        texto1_comparacao.innerHTML += `${resposta.colmeiasEmAlerta[i].colmeia},`;
+                        texto1_comparacao.innerHTML += `${resposta.colmeiasEmAlerta[i].colmeia}`;
                     }
                 }
             } else {
@@ -352,6 +361,26 @@
         }
         function plotarKpi2(resposta) {
             console.log('Dados recebidos, KPI 2: ', resposta)
+            let total = 0;
+            titulo_kpi2.innerHTML = 'Colmeias em processo de enxameação'
+            if (resposta.qntEmEnxameacao.length > 0) {
+                total = resposta.qntEmEnxameacao[0].qtd_colmeias;
+                kpi2_enxameacao.innerHTML = `${total}`;
+            } else {
+                kpi2_enxameacao.innerHTML = '<span class="cor-ok">0</span>'
+            }
+            if (resposta.colmeiasEmEnxameacao.length > 0) {
+                texto2_comparacao.innerHTML = "Colmeias em enxameação: ";
+                for (let i = 0; i < resposta.colmeiasEmEnxameacao.length; i++) {
+                    if (i > 0) {
+                        texto2_comparacao.innerHTML += `, ${resposta.colmeiasEmEnxameacao[i].colmeia}`;
+                    } else {
+                        texto2_comparacao.innerHTML += `${resposta.colmeiasEmEnxameacao[i].colmeia}`;
+                    }
+                }
+            } else {
+                texto2_comparacao.innerHTML = "Nenhuma colmeia em enxameação";
+            }
         }
         function plotarKpi3(resposta) {
             let colmeias_atencao = ''
@@ -361,24 +390,20 @@
             console.log('Dados recebidos, KPI3: ', resposta)
             if (!resposta.colmeiasEmAdaptacao.length || !resposta.qntEmAdaptacao.length) {
                 titulo_kpi3.innerHTML = 'Colmeias em processo de adaptação'
-                kpi3_valor.innerHTML = `<span class='cor-ok' style = "font-size: 16px">
-                    ${textoColmeias}
-                    </span>`
+                kpi3_valor.innerHTML = `<span class='cor-ok'>0</span>`
+                texto3_comparacao.innerHTML = 'Nenhuma colmeia em adaptação'
             } else {
                 titulo_kpi3.innerHTML = 'Colmeias em processo de adaptação'
-                kpi3_valor.innerHTML = `${resposta.qntEmAdaptacao[0].qtd_colmeias_adaptacao}`
+                kpi3_valor.innerHTML = `<span class="cor-adaptacao">${resposta.qntEmAdaptacao[0].qtd_colmeias_adaptacao}</span>`
                 texto3_comparacao.innerHTML = 'Colmeias: '
                 for (let i = 0; i < resposta.colmeiasEmAdaptacao.length; i++) {
-                    if (i == 0) {
-                        texto3_comparacao.innerHTML += `${resposta.colmeiasEmAdaptacao[i].colmeia}`
-                        colmeias_atencao += '' + resposta.colmeiasEmAdaptacao[i].colmeia
-                    } else if (i == resposta.colmeiasEmAdaptacao.length - 1) {
-                        texto3_comparacao.innerHTML += `${resposta.colmeiasEmAdaptacao[i].colmeia}`
-                        colmeias_atencao += ',' + resposta.colmeiasEmAdaptacao[i].colmeia
+                    if (i > 0) {
+                        texto3_comparacao.innerHTML += `, ${resposta.colmeiasEmAdaptacao[i].colmeia}`
+                        colmeias_atencao += `, ${resposta.colmeiasEmAdaptacao[i].colmeia}`
                     } else {
-                        texto3_comparacao.innerHTML += `, ${resposta.colmeiasEmAdaptacao[i].colmeia}, `
-                        colmeias_atencao += '' + resposta.colmeiasEmAdaptacao[i].colmeia
-                    }
+                        texto3_comparacao.innerHTML += `${resposta.colmeiasEmAdaptacao[i].colmeia}`
+                        colmeias_atencao += `${resposta.colmeiasEmAdaptacao[i].colmeia}`
+                    } 
                 }
                 function renderizarContagem() {
                     texto3_comparacao.innerHTML += `<span class="cor-atencao">
@@ -404,14 +429,18 @@
             let sensores_ativos = 0;
             if (resposta.totalSensoresAtivos.length > 0) {
                 sensores_ativos = resposta.totalSensoresAtivos[0].qtd_ativos;
+                kpi4_ativos.innerHTML = `${sensores_ativos}`;
+            } else {
+                kpi4_ativos.innerHTML = `<span class="cor-critica">${sensores_ativos}</span>`;
             }
             let inativos = 0;
             if (resposta.qntColmeiasComProblemas.length > 0) {
                 inativos = resposta.qntColmeiasComProblemas[0].qtd_inativos;
+                 kpi4_inativos.innerHTML = `${inativos}`;
+            } else {
+                kpi4_inativos.innerHTML = `<span style="cor-critica">${inativos}</span>`;
             }
-            titulo_kpi4.innerHTML = 'Sensores ativos e inativos:'
-            kpi4_ativos.innerHTML = `${sensores_ativos}`;
-            kpi4_inativos.innerHTML = `${inativos}`;
+            titulo_kpi4.innerHTML = 'Sensores ativos e inativos'
             if (resposta.quaisColmeiasComProblemas.length > 0) {
                 texto4_comparacao.innerHTML = "Colmeias com problemas nos sensores: ";
                 for (let i = 0; i < resposta.quaisColmeiasComProblemas.length; i++) {
