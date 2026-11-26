@@ -46,37 +46,35 @@
             <!-- CARDS DE INDICADORES (4 Cards como na referência) -->
             <div class="secao-indicadores">
                 <div class="indicador indicador-destaque" id="kpi1">
-                    <h2>Possíveis enxameações</h2>
-                    <span class="valor-card" id="kpi1_valor">0</span>
-                    <p class="texto-comparacao">Colmeia 3 - (Necessita inspeção física nas próximos 20 minutos)</p>
-                </div>
-
-                <div class="indicador" id="kpi2">
-                    <h2>Colmeias em atenção</h2>
+                    <h2 id="titulo_kpi1"></h2>
                     <span class="valor-card">
-                        <span class="cor-critica" id="kpi2_atencao">0</span> | <span id="kpi2_normal">0</span>
+                        <span class="cor-critica" id="kpi1_atencao"></span> | <span id="kpi1_total"></span>
                     </span>
-                    <p class="texto-comparacao">(Representa 33,3% do apiário afetado)</p>
+                    <p class="texto-comparacao" id="texto1_comparacao"></p>
                 </div>
-
-
-                <div class="indicador indicador" id="kpi3">
-                    <h2>Colmeias em processo de adaptação</h2>
-                    <span class="valor-card" id="kpi3_valor">0</span>
-                    <p class="texto-comparacao">(Pós-enxameação: acompanhamento ativo necessário)</p>
+                <div class="indicador" id="kpi2">
+                    <h2 id="titulo_kpi2"></h2>
+                    <span class="valor-card">
+                        <span class="cor-critica" id="kpi2_atencao"></span>|<span id="kpi2_normal"></span>
+                    </span>
+                    <p class="texto-comparacao" id="texto2_comparacao">(Representa 33,3% do apiário afetado)</p>
                 </div>
-
-                <div class="indicador" id="kpi4">
+                <div class="indicador" id="kpi3">
+                    <h2 id="titulo_kpi3"></h2>
+                    <span class="valor-card">
+                        <span id="kpi3_valor"></span>
+                    </span>
+                    <p class="texto-comparacao" id="texto3_comparacao"></p>
+                </div>
+                <!-- <div class="indicador" id="kpi4">
                     <h2></span>Status do sensor</h2>
                     <span class="valor-card valor-hardware">
                         <span class="cor-ok" id="kpi4_ativos">Ativo: 0</span> | <span class="cor-critica"
-                            id="kpi4_inativos">Inativo: 0</span>
+                        id="kpi4_inativos">Inativo: 0</span>
                     </span>
-                    <p class="texto-comparacao">(1 sensor apresentou falha nas últimas 4 horas)</p>
-                </div>
+                    <p class="texto-comparacao" id="texto4_comparacao">(1 sensor apresentou falha nas últimas 4 horas)</p>
+                </div> -->
             </div>
-
-            <!-- SEÇÃO SUPERIOR: Gráfico de Barras e Alertas Recentes -->
             <div class="secao-graficos">
                 <div class="grafico">
                     <h2>Temperatura das Colmeias<span id="data_hora"></span></h2>
@@ -87,20 +85,16 @@
                     <h2>Alertas Recentes</h2>
                 </div>
             </div>
-
-            <!-- SEÇÃO INFERIOR: Status dos Sensores e Guia de Monitoramento -->
             <div class="secao-inferior">
                 <div class="card-ultimas-leituras">
                     <h2>Status sensores</h2>
                     <table class="tabela-leituras" id="status_sensores">
                     </table>
                 </div>
-
-                <!-- GUIA DE MONITORAMENTO -->
                 <div class="card-guia">
                     <h2>Guia de monitoramento</h2>
                     <div class="texto-guia">
-                        <p><strong class="cor-critica">Vermelho (Crítico):</strong> Alteração intensa na colmeia,
+                        <p><strong class="cor-critica">Vermelho (Crítico):</strong>Alteração intensa na colmeia,
                             exigindo intervenção presencial imediata do apicultor para evitar danos ao enxame.</p>
                         <p><strong class="cor-atencao">Amarelo (Atenção):</strong> Variação térmica que indica
                             comportamento fora do padrão, exigindo acompanhamento prioritário no sistema.</p>
@@ -114,10 +108,7 @@
 
         </div>
     </div>
-
-    <!-- SCRIPT DO GRÁFICO DE BARRAS -->
     <script>
-
         Chart.defaults.color = '#ffffff';
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -129,15 +120,15 @@
 
         // TODAS AS KPIS
 
-        // KPI 1
-        function carregarKpis() {
-            fetch(res => res.json())
-                .then(res => res.json())
-                .then(preencherkpi1)
-                .then(erro => console.error)
+        // // KPI 1
+        // function carregarKpis() {
+        //     fetch(res => res.json())
+        //         .then(res => res.json())
+        //         .then(preencherkpi1)
+        //         .then(erro => console.error)
 
 
-        }
+        // }
 
 
         const sensor = document.getElementById('sensorAnalogico');
@@ -182,6 +173,7 @@
         var idApiario = sessionStorage.APIARIO
 
         function obterDadosGrafico() {
+            // fetch graficos
             fetch(`/dashboard/ultimas/dados/${idApiario}`, { cache: 'no-store' }).then(function (response) {
                 if (response.ok) {
                     response.json().then(function (resposta) {
@@ -195,6 +187,7 @@
                 .catch(function (error) {
                     console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
                 });
+            // fetch sensores
             fetch(`/dashboard/ultimas/sensores/${idApiario}`, { cache: 'no-store' }).then(function (response) {
                 if (response.ok) {
                     response.json().then(function (resposta) {
@@ -206,8 +199,65 @@
                 }
             })
                 .catch(function (error) {
-                    console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+                    console.error(`Erro na obtenção dos dados p/ sensores: ${error.message}`);
                 });
+            // fetch kpi1
+            fetch(`/dashboard/kpi1/${idApiario}`, { cache: 'no-store' }).then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                        plotarKpi1(resposta);
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+                .catch(function (error) {
+                    console.error(`Erro na obtenção dos dados p/ kpi 1: ${error.message}`);
+                });
+            // fetch kpi2
+            fetch(`/dashboard/kpi2/${idApiario}`, { cache: 'no-store' }).then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                        plotarKpi2(resposta);
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+                .catch(function (error) {
+                    console.error(`Erro na obtenção dos dados p/ kpi 2: ${error.message}`);
+                });
+            // fetch kpi 3
+            fetch(`/dashboard/kpi3/${idApiario}`, { cache: 'no-store' }).then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                        plotarKpi3(resposta);
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+                .catch(function (error) {
+                    console.error(`Erro na obtenção dos dados p/ kpi 3: ${error.message}`);
+                });
+            // // fetch kpi 4
+            // fetch(`/dashboard/kpi4`, { cache: 'no-store' }).then(function (response) {
+            //     if (response.ok) {
+            //         response.json().then(function (resposta) {
+            //             console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+            //             plotarKpi4(resposta)
+            //         });
+            //     } else {
+            //         console.error('Nenhum dado encontrado ou erro na API');
+            //     }
+            // })
+            //     .catch(function (error) {
+            //         console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            //     });
+            // fetch alertas
             fetch(`/dashboard/ultimas/alertas/${idApiario}`, { cache: 'no-store' }).then(function (response) {
                 if (response.ok) {
                     response.json().then(function (resposta) {
@@ -221,14 +271,13 @@
                 }
             })
                 .catch(function (error) {
-                    console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+                    console.error(`Erro na obtenção dos dados p/ alertas: ${error.message}`);
                     proximaAtualizacao = setTimeout(() => atualizarGrafico(), 20000);
                 });
         }
-        function plotarGrafico(resposta) {
-            console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
-            console.log(resposta)
 
+        function plotarGrafico(resposta) {
+            console.log('Dados do gráfico de temperatura: ', resposta)
             grafico_temperatura.data.labels = [];
             grafico_temperatura.data.datasets[0].data = [];
 
@@ -242,8 +291,7 @@
             grafico_temperatura.update();
         }
         function plotarSensores(resposta) {
-            console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarSensores":')
-            console.log(resposta)
+            console.log('Dados dos sensores: ', resposta)
             status_sensores.innerHTML = `<tr>
                                 <th>Colmeia</th>
                                 <th>Status</th>
@@ -267,12 +315,11 @@
                     <td>${registro.ultimamanutencao}</td>
                     </tr>`;
                 }
-                
+
             }
         }
         function plotarAlertas(resposta) {
-            console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarAlertas":')
-            console.log(resposta)
+            console.log('Dados dos alertas:', resposta)
             card_alertas.innerHTML = '<h2>Alertas Recentes</h2>';
             for (i = 0; i < resposta.length; i++) {
                 var registro = resposta[i];
@@ -300,9 +347,87 @@
                 }
             }
         }
-        
-        let proximaAtualizacao;
+        function plotarKpi1(resposta) {
+            console.log('Dados recebidos, KPI1: ', resposta);
+            let alertas = 0;
+            if (resposta.qntEmAlerta.length > 0) {
+                alertas = resposta.qntEmAlerta[0].qtd_colmeias_alertas;
+            }
+            let total = 0;
+            if (resposta.totalColmeias.length > 0) {
+                total = resposta.totalColmeias[0].qtd_colmeias;
+            }
+            titulo_kpi1.innerHTML = 'Colmeias com temperaturas fora do padrão'
+            kpi1_atencao.innerHTML = `${alertas}`;
+            kpi1_total.innerHTML = `${total}`;
+            if (resposta.colmeiasEmAlerta.length > 0) {
+                texto1_comparacao.innerHTML = "Colmeias em atenção: ";
+                for (let i = 0; i < resposta.colmeiasEmAlerta.length; i++) {
+                    if (i == 0) {
+                        texto1_comparacao.innerHTML += `${resposta.colmeiasEmAlerta[i].colmeia},`;
+                    } else if (i == resposta.colmeiasEmAlerta.length - 1) {
+                        texto1_comparacao.innerHTML += `${resposta.colmeiasEmAlerta[i].colmeia}`;
+                    } else {
+                        texto1_comparacao.innerHTML += `${resposta.colmeiasEmAlerta[i].colmeia},`;
+                    }
+                }
+            } else {
+                texto1_comparacao.innerHTML = "Nenhuma colmeia em atenção";
+            }
+        }
+        function plotarKpi2(resposta) {
+            console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarAlertas":')
+            console.log(resposta)
 
+        }
+        function plotarKpi3(resposta) {
+            let colmeias_atencao = ''
+            let textoColmeias = 'Nenhuma'
+            let duracaoMinutos = 1;
+            let alvo = Date.now() + duracaoMinutos * 60 * 1000;
+            console.log('Dados recebidos, KPI3: ', resposta)
+            if (!resposta.colmeiasEmAdaptacao.length || resposta.qntEmAdaptacao[0].length === 0) {
+                titulo_kpi3.innerHTML = 'Colmeias em processo de adaptação'
+                kpi3_valor.innerHTML = `<span class='cor-ok' style = "font-size: 16px">
+                    ${textoColmeias}
+                    </span>`
+            } else {
+                titulo_kpi3.innerHTML = 'Colmeias em processo de adaptação'
+                kpi3_valor.innerHTML = `${resposta.qntEmAdaptacao[0].qtd_colmeias_adaptacao}`
+                texto3_comparacao.innerHTML = 'Colmeias: '
+                for (let i = 0; i < resposta.colmeiasEmAdaptacao.length; i++) {
+                    if (i == 0) {
+                        texto3_comparacao.innerHTML += `${resposta.colmeiasEmAdaptacao[i].colmeia}`
+                        colmeias_atencao += '' + resposta.colmeiasEmAdaptacao[i].colmeia
+                    } else if (i == resposta.colmeiasEmAdaptacao.length - 1) {
+                        texto3_comparacao.innerHTML += `${resposta.colmeiasEmAdaptacao[i].colmeia}`
+                        colmeias_atencao += ',' + resposta.colmeiasEmAdaptacao[i].colmeia
+                    } else {
+                        texto3_comparacao.innerHTML += `, ${resposta.colmeiasEmAdaptacao[i].colmeia}, `
+                        colmeias_atencao += '' + resposta.colmeiasEmAdaptacao[i].colmeia
+                    }
+                }
+                function renderizarContagem() {
+                    texto3_comparacao.innerHTML += `<span class="cor-atencao">
+                        <br>Analise as colmeias em ${duracaoMinutos} min
+                        </span>`;
+                }
+                renderizarContagem();
+                let intervalo = setInterval(() => {
+                    duracaoMinutos--
+                    if (duracaoMinutos <= 0) {
+                        clearInterval(intervalo);
+                        texto3_comparacao.innerHTML = `<span class="cor-critica">
+                            Atenção! <br> As colmeias ${colmeias_atencao} podem ter sofrido enxameações
+                            </span>`
+                        return;
+                    }
+                    renderizarContagem()
+                }, 60 * 1000);
+            }
+        }
+      
+        let proximaAtualizacao;
 
         // A partir daqui é criada uma função que atualiza os gráficos, tabelas e alertas. Essa função é ativada nas linhas 215, 219 e 224
 
@@ -331,6 +456,7 @@
                 .catch(function (error) {
                     console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
                 });
+
             fetch(`/dashboard/ultimas/sensores/${idApiario}`, { cache: 'no-store' })
                 .then(function (response) {
                     if (response.ok) {
@@ -341,6 +467,7 @@
                                                     <th>Colmeia</th>
                                                     <th>Status</th>
                                                     <th>Última Manutenção</th>
+                                                    <th>Próxima Manutenção</th>
                                                 </tr>`;
                             for (let i = 0; i < novoRegistro.length; i++) {
                                 var registro = novoRegistro[i];
@@ -368,6 +495,7 @@
                 .catch(function (error) {
                     console.error(`Erro na obtenção dos dados p/ sensores: ${error.message}`);
                 });
+
             fetch(`/dashboard/ultimas/alertas/${idApiario}`, { cache: 'no-store' })
                 .then(function (response) {
                     if (response.ok) {
