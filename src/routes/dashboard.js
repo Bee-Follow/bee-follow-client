@@ -5,21 +5,21 @@ var dashboardController = require("../controllers/dashboardController");
 
 // KPIS 
 // ------------------------------ KPI 1
-router.get("/kpi1", function (req, res) {
+router.get("/kpi1/:idApiario", function (req, res) {
     dashboardController.kpi1(req, res);
 })
 
 // ------------------------------ KPI 2
-router.get("/kpi2", function (req, res) {
+router.get("/kpi2/:idApiario", function (req, res) {
     dashboardController.kpi2(req, res);
 })
 
-router.get("/kpi3", function (req, res) {
+router.get("/kpi3/:idApiario", function (req, res) {
     dashboardController.kpi3(req, res)
 })
 
 // ------------------------------ KPI 4
-router.get("/kpi4", function (req, res) { 
+router.get("/kpi4/:idApiario", function (req, res) { 
     dashboardController.kpi4(req, res);
 })
 

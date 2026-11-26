@@ -2,53 +2,46 @@ var database = require("../database/config");
 
 // Select das KPI´S
 // 1ª KPI - colmeia com temperatura fora do padrão
-function kpi1TodasInformacoes() {
-    var instrucaoSql = `select * from vw_kpi1_todas_informacoes;` // Todas as informações juntas para verificar se está tudo correto
+function kpi1TotalDeColmeias(idApiario) {
+    var instrucaoSql = `select qtd_colmeias from vw_kpi1_qnt_colmeias where fk_apiario = ${idApiario};` // Total de colmeias que temos registrados
     return database.executar(instrucaoSql);
 }
 
-function kpi1TotalDeColmeias() {
-    var instrucaoSql = `select * from vw_kpi1_qnt_colmeias;` // Total de colmeias que temos registrados
+function kpi1QuantidadeDeColmeiasEmAlerta(idApiario) {
+    var instrucaoSql = `select qtd_colmeias_alertas from vw_kpi1_qnt_colmeias_em_alerta where fk_apiario = ${idApiario};` // Quantidade de Colmeias que estão em alerta
     return database.executar(instrucaoSql);
 }
 
-function kpi1QuantidadeDeColmeiasEmAlerta() {
-    var instrucaoSql = `select * from vw_kpi1_qnt_colmeias_em_alerta;` // Quantidade de Colmeias que estão em alerta
+function kpi1ColmeiasEmAlerta(idApiario) {
+    var instrucaoSql = `select colmeia from vw_kpi1_colmeias_em_alerta where fk_apiario = ${idApiario};` // essa informação vai mostar QUAIS são as colmeias que estão em alerta 
     return database.executar(instrucaoSql);
 }
-
-function kpi1ColmeiasEmAlerta() {
-    var instrucaoSql = `select * from vw_kpi1_colmeias_em_alerta;` // essa informação vai mostar QUAIS são as colmeias que estão em alerta 
-    return database.executar(instrucaoSql);
-}
-
-
 // 2ª KPI - colmeias em processo de adaptação
 
-function kpi2QuaisColmeiasEmAdaptacao() {
-    var instrucaoSql = `select * from vw_kpi2_colmeias_em_adaptacao;`  // QUAIS colmeias estão em adaptaçaõ
+function kpi3QuaisColmeiasEmAdaptacao(idApiario) {
+    var instrucaoSql = `select * from vw_kpi3_colmeias_em_adaptacao where fk_apiario = ${idApiario};`  // QUAIS colmeias estão em adaptaçaõ
     return database.executar(instrucaoSql);
 }
 
-function kpi2QuantidadeDeColmeiasEmAdaptacao() {
-    var instrucaoSql = `select * from vw_kpi2_qnt_colmeias_adaptacao;` // QUANTIDADE de colmeias em periodo de adaptação
+function kpi3QuantidadeDeColmeiasEmAdaptacao(idApiario) {
+    var instrucaoSql = `select * from vw_kpi3_qnt_colmeias_adaptacao where fk_apiario = ${idApiario};` // QUANTIDADE de colmeias em periodo de adaptação
     return database.executar(instrucaoSql);
 }
 
 // 3ª KPI - 
 
 // 4ª KPI - status do sensor - total 12
-function kpi4TotalDeSensoresAtivos() {
+function kpi4TotalDeSensoresAtivos(idApiario) {
     var instrucaoSql = `select * from vw_kpi4_qnt_colmeias;` // TOTAL de colmeias que tem sensores ativos
     return database.executar(instrucaoSql);
 }
 
-function kpi4QuantidadeDeColmeiasComProblemas() {
+function kpi4QuantidadeDeColmeiasComProblemas(idApiario) {
     var instrucaoSql = `select * from vw_kpi4_qnt_colmeias_falhas;` // QUANTIDADE de colmeias que estão com problemas
     return database.executar(instrucaoSql);
 }
 
-function kpi4QuaisColmeiasComProblemas() {
+function kpi4QuaisColmeiasComProblemas(idApiario) {
     var instrucaoSql = `select * from vw_kpi4_colmeias_problemas;` // QUAIS foram as colmeias que tiveram falhas
     return database.executar(instrucaoSql);
 }
@@ -82,12 +75,11 @@ function buscarAlertas(idApiario) {
 }
 
 module.exports = {
-    kpi1TodasInformacoes,
     kpi1TotalDeColmeias,
     kpi1QuantidadeDeColmeiasEmAlerta,
     kpi1ColmeiasEmAlerta,
-    kpi2QuaisColmeiasEmAdaptacao,
-    kpi2QuantidadeDeColmeiasEmAdaptacao,
+    kpi3QuaisColmeiasEmAdaptacao,
+    kpi3QuantidadeDeColmeiasEmAdaptacao,
     kpi4TotalDeSensoresAtivos,
     kpi4QuantidadeDeColmeiasComProblemas,
     kpi4QuaisColmeiasComProblemas,

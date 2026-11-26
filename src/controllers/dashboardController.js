@@ -2,28 +2,35 @@ var dashboardModel = require("../models/dashboardModel");
 
 // KPIS
 function kpi1(req, res) {
+    var idApiario = req.params.idApiario;
     Promise.all([
-        dashboardModel.kpi1TotalDeColmeias(),
-        dashboardModel.kpi1QuantidadeDeColmeiasEmAlerta(),
-        dashboardModel.kpi1ColmeiasEmAlerta()
+        dashboardModel.kpi1TotalDeColmeias(idApiario),
+        dashboardModel.kpi1QuantidadeDeColmeiasEmAlerta(idApiario),
+        dashboardModel.kpi1ColmeiasEmAlerta(idApiario)
     ])
-    .then(function (resultados) { // O .then é a resposta caso o banco responder corretamente, aí ele registra na array do JSON
+    .then(function (resultados) {
         res.status(200).json({
             totalColmeias: resultados[0],
             qntEmAlerta: resultados[1],
             colmeiasEmAlerta: resultados[2]
         });
     })
-    .catch(function (erro) {   // O .catch é se caso der algum erro nas coletas do banco de dados
-        console.log("Erro ao buscar as informações da 1º KPI: ", erro.sqlMessage || erro);
+    .catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar as informações da KPI 1.", erro.sqlMessage);
         res.status(500).json(erro.sqlMessage || erro);
     });
 }
 
 function kpi2(req, res) {
+    res.status(200).json({});
+}
+
+function kpi3(req, res) {
+    var idApiario = req.params.idApiario;
     Promise.all([
-        colmeiasModel.kpi2QuaisColmeiasEmAdaptacao(),
-        colmeiasModel.kpi2QuantidadeDeColmeiasEmAdaptacao()
+        dashboardModel.kpi3QuaisColmeiasEmAdaptacao(idApiario),
+        dashboardModel.kpi3QuantidadeDeColmeiasEmAdaptacao(idApiario)
     ])
     .then(function (resultados) { // O .then é a resposta caso o banco responder corretamente, aí ele registra na array do JSON
         res.status(200).json({
@@ -37,15 +44,12 @@ function kpi2(req, res) {
     });
 }
 
-function kpi3(req, res) {
-    res.status(200).json({});
-}
-
 function kpi4(req, res) {
+    var idApiario = req.params.idApiario;
     Promise.all([
-        dashboardModel.kpi4TotalDeSensoresAtivos(),
-        dashboardModel.kpi4QuantidadeDeColmeiasComProblemas(),
-        dashboardModel.kpi4QuaisColmeiasComProblemas(),
+        dashboardModel.kpi4TotalDeSensoresAtivos(idApiario),
+        dashboardModel.kpi4QuantidadeDeColmeiasComProblemas(idApiario),
+        dashboardModel.kpi4QuaisColmeiasComProblemas(idApiario),
     ])
     .then(function (resultados) { // O .then é a resposta caso o banco responder corretamente, aí ele registra na array do JSON
         res.status(200).json({
