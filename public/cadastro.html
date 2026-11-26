@@ -53,6 +53,8 @@
     </div>
 
     <script>
+        let senha_igual = false
+        let tamanho_senha = false
         let listaEmpresasCadastradas = []
         const showToastBtn = document.getElementById('cadastro');
         const toast = document.getElementById('toast');
@@ -72,6 +74,7 @@
             }
             else {
                 msg = `<span style="color: green;">Senha válida</span>`
+                tamanho_senha = true
             }
 
 
@@ -88,7 +91,7 @@
             }
             else {
                 msg = `<span style="color: green;"> As senhas são iguais </span>`;
-
+                senha_igual = true
             }
             div_conf_senha.innerHTML = `${msg}`;
         }
@@ -101,22 +104,27 @@
             let com = email.indexOf('.com');
             let arroba = email.indexOf('@');
             let arroba_antes_com = arroba < com;
+            let codigo_valido = false
             if (nome == "" || email == "" || senha == "" || conf_senha == "" || codigo == "") {
                 toast.innerHTML = 'Preencha os dados corretamente'
             } else if (com < 0 || arroba < 0) {
                 toast.innerHTML = 'Os email precisa de @ e .com'
             } else if (arroba_antes_com == false) {
                 toast.innerHTML = 'Formato de e-mail inválido. O "@" deve vir antes do ".com"'
+            } else if (senha_igual == false) {
+                toast.innerHTML = 'As senhas não coincidem'
+            } else if (tamanho_senha == false) {
+                toast.innerHTML = 'As senhas precisam ter no mínimo 8 caracteres'
             } else {
                 for (let i = 0; i < listaEmpresasCadastradas.length; i++) {
                     if (listaEmpresasCadastradas[i].codigo_ativacao == codigo) {
                         fk_empresa = listaEmpresasCadastradas[i].id
                         console.log("Código de ativação válido.");
+                        codigo_valido = true
                         break;
-                    } else {
-                        toast.innerHTML = "Mensagem de erro para código inválido";
                     }
                 }
+                if (codigo_valido == true) {
                     fetch("/usuarios/cadastrar", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -129,8 +137,8 @@
                     })
                         .then(function (resposta) {
                             if (resposta.ok) {
+                                toast.innerHTML = 'Cadastro realizado com sucesso! Redirecionando...'
                                 setTimeout(function () {
-                                    toast.innerHTML = 'Cadastro realizado com sucesso! Redirecionando...'
                                     window.location = "./login.html";
                                 }, 2000);
                             } else {
@@ -141,27 +149,31 @@
                         })
                         .catch(function (erro) {
                             console.log("#ERRO:", erro);
-                            mostrarToast("Não foi possível realizar o cadastro. Tente novamente.");
+                            toast.innerHTML = "Não foi possível realizar o cadastro. Tente novamente.";
                         });
+                } else {
+                    toast.innerHTML = 'Código inválido'
                 }
             }
-            function listar() {
-                fetch("/empresas/listar", {
-                    method: "GET",
-                })
-                    .then(function (resposta) {
-                        resposta.json().then((empresas) => {
-                            empresas.forEach((empresa) => {
-                                listaEmpresasCadastradas.push(empresa);
-                                console.log("listaEmpresasCadastradas")
-                                console.log(listaEmpresasCadastradas[0].codigo_ativacao)
-                            });
+
+        }
+        function listar() {
+            fetch("/empresas/listar", {
+                method: "GET",
+            })
+                .then(function (resposta) {
+                    resposta.json().then((empresas) => {
+                        empresas.forEach((empresa) => {
+                            listaEmpresasCadastradas.push(empresa);
+                            console.log("listaEmpresasCadastradas")
+                            console.log(listaEmpresasCadastradas[0].codigo_ativacao)
                         });
-                    })
-                    .catch(function (resposta) {
-                        console.log(`#ERRO: ${resposta}`);
                     });
-            }
+                })
+                .catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                });
+        }
     </script>
 
 </body>
