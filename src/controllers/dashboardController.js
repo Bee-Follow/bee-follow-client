@@ -23,7 +23,21 @@ function kpi1(req, res) {
 }
 
 function kpi2(req, res) {
-    res.status(200).json({});
+    var idApiario = req.params.idApiario;
+    Promise.all([
+        dashboardModel.kpi2ColmeiaEmEnxameacao(idApiario),
+        dashboardModel.kpi2QtdEmEnxameacao(idApiario),
+    ])
+    .then(function (resultados) { // O .then é a resposta caso o banco responder corretamente, aí ele registra na array do JSON
+        res.status(200).json({
+            colmeiasEmEnxameacao: resultados[0],
+            qntEmEnxameacao: resultados[1]
+        });
+    })
+    .catch(function (erro) {   // O .catch é se caso der algum erro nas coletas do banco de dados
+        console.log("Erro ao buscar as informações da 2º KPI: ", erro.sqlMessage || erro);
+        res.status(500).json(erro.sqlMessage || erro);
+    });
 }
 
 function kpi3(req, res) {
@@ -39,7 +53,7 @@ function kpi3(req, res) {
         });
     })
     .catch(function (erro) {   // O .catch é se caso der algum erro nas coletas do banco de dados
-        console.log("Erro ao buscar as informações da 2º KPI: ", erro.sqlMessage || erro);
+        console.log("Erro ao buscar as informações da 3º KPI: ", erro.sqlMessage || erro);
         res.status(500).json(erro.sqlMessage || erro);
     });
 }

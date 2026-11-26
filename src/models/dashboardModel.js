@@ -18,6 +18,16 @@ function kpi1ColmeiasEmAlerta(idApiario) {
 }
 // 2ª KPI -
 
+function kpi2ColmeiaEmEnxameacao(idApiario) {
+    var instrucaoSql = `select colmeia from vw_kpi2_colmeias_em_enxameacao where fk_apiario = ${idApiario};`;
+    return database.executar(instrucaoSql);
+}
+
+function kpi2QtdEmEnxameacao(idApiario) {
+    var instrucaoSql = `select qtd_colmeias from vw_kpi2_colmeias_em_enxameacao where fk_apiario = ${idApiario};`;
+    return database.executar(instrucaoSql);
+}
+
 // 3ª KPI - colmeias em processo de adaptação
 
 function kpi3QuaisColmeiasEmAdaptacao(idApiario) {
@@ -78,6 +88,8 @@ module.exports = {
     kpi1TotalDeColmeias,
     kpi1QuantidadeDeColmeiasEmAlerta,
     kpi1ColmeiasEmAlerta,
+    kpi2ColmeiaEmEnxameacao,
+    kpi2QtdEmEnxameacao,
     kpi3QuaisColmeiasEmAdaptacao,
     kpi3QuantidadeDeColmeiasEmAdaptacao,
     kpi4TotalDeSensoresAtivos,
