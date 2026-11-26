@@ -147,6 +147,8 @@
         var idApiario = sessionStorage.APIARIO
         let proximaAtualizacao;
         function obterDadosGrafico() {
+            let data_hora = new Date()
+            ultima.innerHTML = 'Última Atualização: ' + data_hora.toLocaleString('pt-BR');
             clearTimeout(proximaAtualizacao);
             // fetch graficos
             fetch(`/dashboard/ultimas/dados/${idApiario}`, { cache: 'no-store' }).then(function (response) {
@@ -260,7 +262,6 @@
                 var registro = resposta[i];
                 grafico_temperatura.data.labels.push(registro.id);
                 grafico_temperatura.data.datasets[0].data.push(registro.temperatura);
-                ultima.innerHTML = `Última leitura: ${registro.ultimaAtualizacao}`;
             }
 
             grafico_temperatura.update();
@@ -428,6 +429,8 @@
         }
         function atualizarGrafico() {
             obterDadosGrafico();
+            let data_hora = new Date()
+            ultima.innerHTML = 'Última atualização: ' + data_hora.toLocaleString('pt-BR');
         }
         function sair() {
             window.location.href = "./login.html";
